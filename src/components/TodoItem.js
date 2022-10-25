@@ -1,34 +1,41 @@
-import { useState } from "react"
+import {useState} from 'react'
 
-
-export default function Todoitem({ todo, onChange }) {
-
-    const [isFlag, setIsFlag] = useState(true)
-    const [dane, setDane] = useState(false)
+export default function TodoItem({ todo, todo: { id, title, isCompleted }, onDelete, onChange, changeTitle }) {
     
-    const clazz = dane ? 'red' : 'green'
-   
-   return (
-    <div>
-        {isFlag && <div> 
-            <input
-                 onChange={e => {
-                    onChange({
-                        ...todo,
-                        isCompleted: e.target.checked
-                    })
-                }} 
-                 type='checkbox' 
-                 checked={todo.isCompleted}
-             />
-             
-            <span className={clazz} onClick={() => setDane(!dane)}> {todo.text} </span>
+    const [isFlag, setIsFlag] = useState(false)
+    const [newTitle, setNewTitle] = useState('')
+
+    const handleDelete = () => {
+        onDelete(id)
+    }
+    
+    const handleChange = () => {
+        onChange({...todo, isCompleted: !isCompleted})
+    }
+
+    const handleChangeTitle = (evt) => {
+        setNewTitle(evt.target.value)
+    }
+    
 
 
-        
-            <button onClick={() => setIsFlag(!isFlag)}>X</button>
-        </div>}
-    </div>
-   )
+    return(
+        <div className="form-check">
+           <input className='class="form-check-input"' type='checkbox' checked={isCompleted} onChange={handleChange} />
 
+           { 
+            isFlag ? 
+              <>
+                <input type='text' onChange={handleChangeTitle} value={newTitle} />
+                <button className='btn btn-outline-secondary' onClick={() => setIsFlag(false)}>adding</button>
+              </>
+              :
+              <>
+                <span onClick={() => setIsFlag(true)}> {newTitle || title } </span>
+                <button className='btn btn-outline-secondary' onClick={handleDelete}> X </button>
+              </>
+           }
+            
+        </div>
+    )
 }

@@ -1,68 +1,60 @@
-import './App.css';
-import React, { useState } from 'react';
+import {useState} from 'react'
 
-import TodoList from './components/ToDoList';
-import TodoForm from './components/TodoForm';
-import TodoFooter from './components/TodoFooter';
+import AddTodo from './components/addTodo';
+import Footer from './components/todoFooter';
+import TodoList from './components/todoList';
 
-
-export default function() {
+import { initialState } from './initialState';
 
 
- const [todos, setTodos] = useState([
-    {
-      id: Math.random(),
-      text: 'learn JS',
-      isCompleted: false,
-    },
-    {
-      id: Math.random(),
-      text: 'React JS',
-      isCompleted: false,
-    },
-    {
-      id: Math.random(),
-      text: 'Node JS',
-      isCompleted: false,
-    },
- ])
+export default function App() {
 
- 
+  const [todos, setTodos] = useState(initialState)
+  const [title, setTitle] = useState('')
 
- const onAdd = (text) => {
-      setTodos([
-        ...todos,
-        {
-          id: Math.random(),
-          text: text,
-          isCompleted: false
-        }
-    ])
+  
+  const addTodo = () => {
+    setTodos([
+      ...todos,
+      { 
+        id: Math.random(),
+        isCompleted: false,  
+        title: title, 
+      }
+    ]);
+    setTitle('')
+  }
+
+  const changeTitle = (evt) => {
+    setTitle(evt)
  }
 
 
-  const clearIscompleted = () => {
-    setTodos(todos.filter(todo => !todo.isCompleted))
+  const onDelete = (id) => {
+    setTodos(todos.filter(todo => todo.id !== id))
   }
 
-  
   const onChange = (newTodo) => {
     setTodos(todos.map(todo => {
       if (todo.id === newTodo.id) return newTodo
       return todo
     }))
   }
+  
 
-    return(
-        <div>
-          
-          <div>
-              <TodoForm onAdd={onAdd} />
-              <TodoList todos={todos}  onChange={onChange}/>
-              <TodoFooter clearIscompleted={clearIscompleted} todos={todos}/>
-          </div>
-        </div>
-    )
+  const clearCompleted = () => {
+    setTodos(todos.filter(todo => !todo.isCompleted))
+  }
 
+
+   return (
+       <div className="app todo-app">
+           <div className="search-panel d-flex">
+           <AddTodo addTodo={addTodo} changeTitle={changeTitle} title={title} />
+           </div>
+           <TodoList todos={todos} onDelete={onDelete} onChange={onChange} changeTitle={changeTitle} />
+           <Footer clearCompleted={clearCompleted} todos={todos}  />
+       </div>
+   )
 
 };

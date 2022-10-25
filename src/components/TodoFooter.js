@@ -1,13 +1,13 @@
 
-export default function TodoFooter({ todos, clearIscompleted }) {
+export default function Footer({ todos, clearCompleted }) {
+    const completedSize = todos.filter(todo => todo.isCompleted).length
+    const todoLangth = todos.length
 
-    const completedSize = todos.filter(elem => elem.isCompleted).length
+    return(
+        <div>
+            <span>  {completedSize} / {todoLangth} completed </span>
 
-    return (
-     <div>
-         <span> {completedSize} / {todos.length} completed </span>
-         <button onClick={clearIscompleted}>clear completed</button>
-     </div>
+            <button className='btn btn-info' onClick={clearCompleted}>clear completed</button>
+        </div>
     )
- 
- }
+}
